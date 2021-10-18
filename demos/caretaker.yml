@@ -12,7 +12,7 @@ tower_infra_workloads:
   - redhat_cop.tower_configuration.job_templates
   - redhat_cop.tower_configuration.workflow_job_templates
 
-tower_projects:
+controller_projects:
   - name: "Caretaker-Demo"
     description: "Main deploy repo"
     organization: "REDHAT NETWORK ORGANIZATION"
@@ -31,7 +31,7 @@ tower_projects:
     wait: true
     scm_url: "https://github.com/redhattelco/caretaker_collection.git"
 
-tower_credential_types:
+controller_credential_types:
   - name: "caretaker-demo-git-key"
     description: "credential to store deploy key"
     kind: cloud
@@ -48,13 +48,13 @@ tower_credential_types:
       extra_vars:
         secret_key: "{% raw %}{  { tower.filename.my_key  }}{% endraw %}"
 
-tower_credentials:
+controller_credentials:
   - name: "Caretaker-Demo: credential"
     description: Credentials for caretaker deploy key
     organization: "REDHAT NETWORK ORGANIZATION"
     credential_type: "caretaker-demo-git-key"
 
-tower_templates:
+templates:
   - name: "Caretaker-Demo: Main Deploy Task"
     job_type: run
     inventory: "Workshop Inventory"
@@ -99,7 +99,7 @@ tower_templates:
     credentials:
     - "Workshop Credential"
 
-tower_workflows:
+controller_workflows:
   - name: "Caretaker Demo Workflow"
     organization: "REDHAT NETWORK ORGANIZATION"
     webhook_service: "github"
