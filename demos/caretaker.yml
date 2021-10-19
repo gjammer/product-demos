@@ -15,7 +15,7 @@ tower_infra_workloads:
 controller_projects:
   - name: "Caretaker-Demo"
     description: "Main deploy repo"
-    organization: "Red Hat network organization"
+    organization: "Default"
     scm_type: git
     scm_update_on_launch: true
     scm_update_cache_timeout: 3600
@@ -24,7 +24,7 @@ controller_projects:
 
   - name: "Caretaker-Collection"
     description: "Caretaker collection"
-    organization: "Red Hat network organization"
+    organization: "Default"
     scm_type: git
     scm_update_on_launch: true
     scm_update_cache_timeout: 3600
