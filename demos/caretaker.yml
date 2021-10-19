@@ -4,18 +4,18 @@ category: network
 workshop_type:
   - network
   - demo
-tower_validate_certs: false
+controller_validate_certs: false
 tower_infra_workloads:
-  - redhat_cop.tower_configuration.projects
-  - redhat_cop.tower_configuration.credential_types
-  - redhat_cop.tower_configuration.credentials
-  - redhat_cop.tower_configuration.job_templates
-  - redhat_cop.tower_configuration.workflow_job_templates
+  - redhat_cop.controller_configuration.projects
+  - redhat_cop.controller_configuration.credential_types
+  - redhat_cop.controller_configuration.credentials
+  - redhat_cop.controller_configuration.job_templates
+  - redhat_cop.controller_configuration.workflow_job_templates
 
 controller_projects:
   - name: "Caretaker-Demo"
     description: "Main deploy repo"
-    organization: "REDHAT NETWORK ORGANIZATION"
+    organization: "Red Hat network organization"
     scm_type: git
     scm_update_on_launch: true
     scm_update_cache_timeout: 3600
@@ -24,7 +24,7 @@ controller_projects:
 
   - name: "Caretaker-Collection"
     description: "Caretaker collection"
-    organization: "REDHAT NETWORK ORGANIZATION"
+    organization: "Red Hat network organization"
     scm_type: git
     scm_update_on_launch: true
     scm_update_cache_timeout: 3600
@@ -51,10 +51,10 @@ controller_credential_types:
 controller_credentials:
   - name: "Caretaker-Demo: credential"
     description: Credentials for caretaker deploy key
-    organization: "REDHAT NETWORK ORGANIZATION"
+    organization: "Red Hat network organization"
     credential_type: "caretaker-demo-git-key"
 
-templates:
+controller_templates:
   - name: "Caretaker-Demo: Main Deploy Task"
     job_type: run
     inventory: "Workshop Inventory"
@@ -101,63 +101,113 @@ templates:
 
 controller_workflows:
   - name: "Caretaker Demo Workflow"
-    organization: "REDHAT NETWORK ORGANIZATION"
+    organization:
+      name: "Red Hat network organization"
     webhook_service: "github"
     workflow_nodes:
-      - unified_job_template: "Caretaker-Demo"
+      - unified_job_template:
+          name: "Caretaker-Demo"
+          type: job_template
+          organization:
+            name: "Red Hat network organization"
         identifier: node101
-        success_nodes:
-          - node201
-        failure_nodes: []
-        always_nodes: []
-      - unified_job_template: "Caretaker-Demo: Main Deploy Task"
+        related:
+          success_nodes:
+            - identifier: node201
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker-Demo: Main Deploy Task"
+          type: job_template
+          organization:
+            name: "Red Hat network organization"
         identifier: node201
-        success_nodes:
-          - node301
-        failure_nodes:
-          - node302
-        always_nodes: []
-      - unified_job_template: "Caretaker-Demo: Backup device configs"
+        related:
+          success_nodes:
+          - identifier: node301
+          failure_nodes:
+          - identifier: node302
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker-Demo: Backup device configs"
+          type: job_template
+          organization:
+            name: "Red Hat network organization"
         identifier: node301
-        success_nodes: []
-        failure_nodes: []
-        always_nodes: []
-      - approval_node:
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
           name: "Sync to Devices"
-        success_nodes:
-          - node401
-        failure_nodes: node402
-        always_nodes: []
+          type: workflow_approval
+          organization:
+            name: "Red Hat network organization"
+        related:
+          success_nodes:
+            - identifier: node401
+          failure_nodes:
+            - identifier: node402
+          always_nodes: []
         identifier: node302
-      - approval_node:
+      - unified_job_template:
           name: "Sync to SoT"
+          type: workflow_approval
+          organization:
+            name: "Red Hat network organization"
         identifier: node402
-        success_nodes:
-          - node501
-        failure_nodes: node502
-        always_nodes: []
-      - unified_job_template: "Caretaker: Sync from SoT to devices"
+        related:
+          success_nodes:
+          - identifier: node501
+          failure_nodes:
+            - identifier: node502
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker: Sync from SoT to devices"
+          type: job_template
+          organization:
+            name: "Red Hat network organization"
         identifier: node401
-        success_nodes:
-          - node601
-        failure_nodes: []
-        always_nodes: []
-      - unified_job_template: "Caretaker: Sync to SoT from devices"
+        related:
+          success_nodes:
+          - identifier: node601
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker: Sync to SoT from devices"
+          type: job_template
+          organization:
+            name: "Red Hat network organization"
         identifier: node501
-        success_nodes:
-          - node601
-        failure_nodes: []
-        always_nodes: []
-      - unified_job_template: "Caretaker: Open a ticket"
+        related:
+          success_nodes:
+          - identifier: node601
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker: Open a ticket"
+          type: job_template
+          organization:
+            name: "Red Hat network organization"
         identifier: node502
-        success_nodes: []
-        failure_nodes: []
-        always_nodes: []
-      - unified_job_template: "Caretaker-Demo: Main Deploy Task"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker-Demo: Main Deploy Task"
+          type: job_template
+          organization:
+            name: "Red Hat network organization"
         identifier: node601
-        success_nodes:
-          - node701
-        failure_nodes: []
-        always_nodes: []
-      - unified_job_template: "Caretaker-Demo: Backup device configs"
+        related:
+          success_nodes:
+          - identifier: node701
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker-Demo: Backup device configs"
+          type: job_template
+          organization:
+            name: "Red Hat network organization"
         identifier: node701

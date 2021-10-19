@@ -34,7 +34,9 @@ tags:
   - tower
   - awx
 
-dependencies: {}
+dependencies:
+  redhat_cop.controller_configuration: "2.0.0"
+  awx.awx: "19.4.0"
 
 repository: http://github.com/ansible/product-demos
 documentation: http://github.com/ansible/product-demos

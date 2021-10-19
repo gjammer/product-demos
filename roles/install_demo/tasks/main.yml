@@ -6,9 +6,9 @@
 - name: install tower workloads
   include_tasks: workloads.yml
   vars:
-    tower_username: "{{ my_tower_username }}"
-    tower_password: "{{ my_tower_password }}"
-    tower_hostname: "{{ my_tower_host }}"
+    controller_username: "{{ my_tower_username }}"
+    controller_password: "{{ my_tower_password }}"
+    controller_hostname: "{{ my_tower_host }}"
   when: demo_path.stat.exists
 
 - block:
@@ -42,7 +42,7 @@
   - name: install all job templates
     include_tasks: job_template_loop.yml
     loop: "{{ full_demo_info }}"
-    when: 
+    when:
       - demo == "all"
 
   - name: install single job template
