@@ -51,7 +51,7 @@ controller_credential_types:
 controller_credentials:
   - name: "Caretaker-Demo: credential"
     description: Credentials for caretaker deploy key
-    organization: "Red Hat network organization"
+    organization: "Default"
     credential_type: "caretaker-demo-git-key"
 
 controller_templates:
@@ -102,14 +102,14 @@ controller_templates:
 controller_workflows:
   - name: "Caretaker Demo Workflow"
     organization:
-      name: "Red Hat network organization"
+      name: "Default"
     webhook_service: "github"
     workflow_nodes:
       - unified_job_template:
           name: "Caretaker-Demo"
           type: job_template
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         identifier: node101
         related:
           success_nodes:
@@ -120,7 +120,7 @@ controller_workflows:
           name: "Caretaker-Demo: Main Deploy Task"
           type: job_template
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         identifier: node201
         related:
           success_nodes:
@@ -132,7 +132,7 @@ controller_workflows:
           name: "Caretaker-Demo: Backup device configs"
           type: job_template
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         identifier: node301
         related:
           success_nodes: []
@@ -142,7 +142,7 @@ controller_workflows:
           name: "Sync to Devices"
           type: workflow_approval
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         related:
           success_nodes:
             - identifier: node401
@@ -154,7 +154,7 @@ controller_workflows:
           name: "Sync to SoT"
           type: workflow_approval
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         identifier: node402
         related:
           success_nodes:
@@ -166,7 +166,7 @@ controller_workflows:
           name: "Caretaker: Sync from SoT to devices"
           type: job_template
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         identifier: node401
         related:
           success_nodes:
@@ -177,7 +177,7 @@ controller_workflows:
           name: "Caretaker: Sync to SoT from devices"
           type: job_template
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         identifier: node501
         related:
           success_nodes:
@@ -188,7 +188,7 @@ controller_workflows:
           name: "Caretaker: Open a ticket"
           type: job_template
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         identifier: node502
         related:
           success_nodes: []
@@ -198,7 +198,7 @@ controller_workflows:
           name: "Caretaker-Demo: Main Deploy Task"
           type: job_template
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         identifier: node601
         related:
           success_nodes:
@@ -209,5 +209,5 @@ controller_workflows:
           name: "Caretaker-Demo: Backup device configs"
           type: job_template
           organization:
-            name: "Red Hat network organization"
+            name: "Default"
         identifier: node701
