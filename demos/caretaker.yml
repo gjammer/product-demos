@@ -60,6 +60,7 @@ controller_templates:
     inventory: "Workshop Inventory"
     project: "Caretaker-Demo"
     playbook: "deploy.yml"
+    execution_environment: "Ansible Engine 2.9 execution environment"
     credentials:
     - "Caretaker-Demo: credential"
     - "Workshop Credential"
@@ -69,6 +70,7 @@ controller_templates:
     inventory: "Workshop Inventory"
     project: "Caretaker-Demo"
     playbook: "git-push.yaml"
+    execution_environment: "Ansible Engine 2.9 execution environment"
     credentials:
     - "Caretaker-Demo: credential"
     - "Workshop Credential"
@@ -77,6 +79,7 @@ controller_templates:
     job_type: run
     inventory: "Workshop Inventory"
     project: "Caretaker-Demo"
+    execution_environment: "Ansible Engine 2.9 execution environment"
     playbook: "git-push.yaml"
     credentials:
     - "Caretaker-Demo: credential"
@@ -86,6 +89,7 @@ controller_templates:
     job_type: run
     inventory: "Workshop Inventory"
     project: "Caretaker-Collection"
+    execution_environment: "Ansible Engine 2.9 execution environment"
     playbook: "playbooks/sync_to_devices.yml"
     credentials:
     - "Caretaker-Demo: credential"
@@ -95,6 +99,7 @@ controller_templates:
     job_type: run
     inventory: "Workshop Inventory"
     project: "Caretaker-Demo"
+    execution_environment: "Ansible Engine 2.9 execution environment"
     playbook: "open_ticket.yml"
     credentials:
     - "Workshop Credential"
