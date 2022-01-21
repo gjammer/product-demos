@@ -130,7 +130,7 @@ controller_workflows:
         identifier: node101
         related:
           success_nodes:
-          - identifier: node301
+          - identifier: node201
       - unified_job_template:
           name: "Windows Updates"
           type: job_template
