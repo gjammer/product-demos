@@ -1,0 +1,197 @@
+---
+name: azure
+category: rhel
+workshop_type:
+  - rhel
+  - demo
+controller_validate_certs: false
+tower_infra_workloads:
+  - redhat_cop.controller_configuration.projects
+  - redhat_cop.controller_configuration.credential_types
+  - redhat_cop.controller_configuration.credentials
+  - redhat_cop.controller_configuration.job_templates
+  - redhat_cop.controller_configuration.workflow_job_templates
+
+controller_projects:
+  - name: "Azure-demo"
+    description: "Azure Demos"
+    organization: "Default"
+    scm_type: git
+    scm_update_on_launch: true
+    scm_update_cache_timeout: 3600
+    wait: true
+    scm_url: "https://github.com/redhattelco/azure-provisioning-demo.git"
+
+controller_credentials:
+  - name: "Azure-Demo: credential"
+    description: Credentials for Azure
+    organization: "Default"
+    credential_type: "Microsoft Azure Resource Manager"
+    inputs:
+      client: "9fexxxxxxx"
+      secret: "$encrypted$"
+      tenant: "efcc3d1e-3dxxxxxxxxx"
+      subscription: "xxxxxxxxxx"
+
+controller_templates:
+  - name: "Caretaker-Demo: Main Deploy Task"
+    job_type: run
+    inventory: "Workshop Inventory"
+    project: "Caretaker-Demo"
+    playbook: "deploy.yml"
+    execution_environment: "Ansible Engine 2.9 execution environment"
+    credentials:
+    - "Caretaker-Demo: credential"
+    - "Workshop Credential"
+
+  - name: "Caretaker-Demo: Backup device configs"
+    job_type: run
+    inventory: "Workshop Inventory"
+    project: "Caretaker-Demo"
+    playbook: "git-push.yaml"
+    execution_environment: "Ansible Engine 2.9 execution environment"
+    credentials:
+    - "Caretaker-Demo: credential"
+    - "Workshop Credential"
+
+  - name: "Caretaker: Sync to SoT from devices"
+    job_type: run
+    inventory: "Workshop Inventory"
+    project: "Caretaker-Demo"
+    execution_environment: "Ansible Engine 2.9 execution environment"
+    playbook: "git-push.yaml"
+    credentials:
+    - "Caretaker-Demo: credential"
+    - "Workshop Credential"
+
+  - name: "Caretaker: Sync from SoT to devices"
+    job_type: run
+    inventory: "Workshop Inventory"
+    project: "Caretaker-Collection"
+    execution_environment: "Ansible Engine 2.9 execution environment"
+    playbook: "playbooks/sync_to_devices.yml"
+    credentials:
+    - "Caretaker-Demo: credential"
+    - "Workshop Credential"
+
+  - name: "Caretaker: Open a ticket"
+    job_type: run
+    inventory: "Workshop Inventory"
+    project: "Caretaker-Demo"
+    execution_environment: "Ansible Engine 2.9 execution environment"
+    playbook: "open_ticket.yml"
+    credentials:
+    - "Workshop Credential"
+
+controller_workflows:
+  - name: "Caretaker Demo Workflow"
+    organization:
+      name: "Default"
+    webhook_service: "github"
+    workflow_nodes:
+      - unified_job_template:
+          name: "Caretaker-Demo"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node101
+        related:
+          success_nodes:
+            - identifier: node201
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker-Demo: Main Deploy Task"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node201
+        related:
+          success_nodes:
+          - identifier: node301
+          failure_nodes:
+          - identifier: node302
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker-Demo: Backup device configs"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node301
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Sync to Devices"
+          type: workflow_approval
+          organization:
+            name: "Default"
+        related:
+          success_nodes:
+            - identifier: node401
+          failure_nodes:
+            - identifier: node402
+          always_nodes: []
+        identifier: node302
+      - unified_job_template:
+          name: "Sync to SoT"
+          type: workflow_approval
+          organization:
+            name: "Default"
+        identifier: node402
+        related:
+          success_nodes:
+          - identifier: node501
+          failure_nodes:
+            - identifier: node502
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker: Sync from SoT to devices"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node401
+        related:
+          success_nodes:
+          - identifier: node601
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker: Sync to SoT from devices"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node501
+        related:
+          success_nodes:
+          - identifier: node601
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker: Open a ticket"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node502
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker-Demo: Main Deploy Task"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node601
+        related:
+          success_nodes:
+          - identifier: node701
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Caretaker-Demo: Backup device configs"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node701
