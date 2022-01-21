@@ -127,7 +127,7 @@ controller_workflows:
           type: job_template
           organization:
             name: "Default"
-        identifier: node201
+        identifier: node101
         related:
           success_nodes:
           - identifier: node301
