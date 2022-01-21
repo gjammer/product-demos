@@ -110,11 +110,22 @@ controller_templates:
   - name: "Open SNOW Change Request"
     job_type: run
     inventory: "Workshop Inventory"
-    limit: "student1-ansible1"
+    limit: "student1-ansible-1"
     project: "Windows-Demo"
     playbook: "snow.yml"
     credentials:
     - "SNOW Credential"
+    - "Workshop Credential"
+
+  - name: "Send Completion Notification"
+    job_type: run
+    inventory: "Workshop Inventory"
+    limit: "student1-win1"
+    project: "Windows-Demo"
+    playbook: "backup.yml"
+    execution_environment: "windows workshop execution environment"
+    credentials:
+    - "Windows Credential"
 
 
 controller_workflows:
@@ -172,7 +183,8 @@ controller_workflows:
             name: "Default"
         identifier: node401
         related:
-          success_nodes: []
+          success_nodes:
+            - identifier: node501
           failure_nodes: []
           always_nodes: []
       - unified_job_template:
@@ -181,6 +193,16 @@ controller_workflows:
           organization:
             name: "Default"
         identifier: node402
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Send Completion Notification"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node501
         related:
           success_nodes: []
           failure_nodes: []
