@@ -29,24 +29,24 @@ controller_credential_types:
     inputs:
       fields:
         - id: SNOW_USERNAME
-        type: string
-        label: Service Now Username
-      - id: SNOW_INSTANCE
-        type: string
-        label: Service Now Instance Name (devXXXXX)
-      - id: SNOW_PASSWORD
-        type: string
-        label: Service Now Password
-        secret: true
+          type: string
+          label: Service Now Username
+        - id: SNOW_INSTANCE
+          type: string
+          label: Service Now Instance Name (devXXXXX)
+        - id: SNOW_PASSWORD
+          type: string
+          label: Service Now Password
+          secret: true
       required:
         - SNOW_USERNAME
         - SNOW_INSTANCE
         - SNOW_PASSWORD
     injectors:
       extra_vars:
-        snow_username: '{%raw%}{{ SNOW_USERNAME }}{%endraw%}'
-        snow_password: '{%raw%}{{ SNOW_PASSWORD }}{%endraw%}'
-        snow_instance: '{%raw%}{{ SNOW_INSTANCE }}{%endraw%}'
+        snow_username: "{% raw %}{  { SNOW_USERNAME  }}{% endraw %}"
+        snow_password: "{% raw %}{  { SNOW_PASSWORD  }}{% endraw %}"
+        snow_instance: "{% raw %}{  { SNOW_INSTANCE  }}{% endraw %}"
 
 controller_credentials:
 - name: Windows Credential
@@ -60,7 +60,7 @@ controller_credentials:
 - name: SNOW Credential
   description: Credentials
   organization: Default
-  credential_type: "SNOW Credential Type"
+  credential_type: "SNOW  Credential Type"
   inputs:
     SNOW_USERNAME: "admin"
     SNOW_PASSWORD: "Ansible!23"
