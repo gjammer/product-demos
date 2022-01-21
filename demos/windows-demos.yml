@@ -60,7 +60,7 @@ controller_credentials:
 - name: SNOW Credential
   description: Credentials
   organization: Default
-  credential_type: "SNOW  Credential Type"
+  credential_type: "SNOW Credential Type"
   inputs:
     SNOW_USERNAME: "admin"
     SNOW_PASSWORD: "Ansible!23"
