@@ -1,0 +1,187 @@
+---
+name: caretaker
+category: network
+workshop_type:
+  - windows
+  - demo
+controller_validate_certs: false
+tower_infra_workloads:
+  - redhat_cop.controller_configuration.projects
+  - redhat_cop.controller_configuration.credential_types
+  - redhat_cop.controller_configuration.credentials
+  - redhat_cop.controller_configuration.job_templates
+  - redhat_cop.controller_configuration.workflow_job_templates
+
+controller_projects:
+  - name: "Windows-Demo"
+    description: "Main deploy repo"
+    organization: "Default"
+    scm_type: git
+    scm_update_on_launch: true
+    scm_update_cache_timeout: 3600
+    wait: true
+    scm_url: "https://github.com/termlen0/windows-demos.git"
+
+controller_credential_types:
+  - name: "SNOW Credential Type"
+    description: "credential to store SNOW"
+    kind: cloud
+    inputs:
+      fields:
+        - id: SNOW_USERNAME
+        type: string
+        label: Service Now Username
+      - id: SNOW_INSTANCE
+        type: string
+        label: Service Now Instance Name (devXXXXX)
+      - id: SNOW_PASSWORD
+        type: string
+        label: Service Now Password
+        secret: true
+      required:
+        - SNOW_USERNAME
+        - SNOW_INSTANCE
+        - SNOW_PASSWORD
+    injectors:
+      extra_vars:
+        snow_username: '{%raw%}{{ SNOW_USERNAME }}{%endraw%}'
+        snow_password: '{%raw%}{{ SNOW_PASSWORD }}{%endraw%}'
+        snow_instance: '{%raw%}{{ SNOW_INSTANCE }}{%endraw%}'
+
+controller_credentials:
+- name: Windows Credential
+  description: Credentials
+  organization: Default
+  credential_type: Machine
+  inputs:
+    username: student1
+    password: ansible123
+
+- name: SNOW Credential
+  description: Credentials
+  organization: Default
+  credential_type: "SNOW Credential Type"
+  inputs:
+    SNOW_USERNAME: "admin"
+    SNOW_PASSWORD: "Ansible!23"
+    SNOW_INSTANCE: "dev109939"
+
+controller_templates:
+  - name: "Windows Updates"
+    job_type: run
+    inventory: "Workshop Inventory"
+    limit: "student1-win1"
+    project: "Windows-Demo"
+    playbook: "win_updates/site.yml"
+    execution_environment: "windows workshop execution environment"
+    credentials:
+    - "Windows Credential"
+
+  - name: "Install IIS"
+    job_type: run
+    inventory: "Workshop Inventory"
+    limit: "student1-win1"
+    project: "Windows-Demo"
+    playbook: "site.yml"
+    execution_environment: "windows workshop execution environment"
+    credentials:
+    - "Windows Credential"
+
+  - name: "Install Additional Packages"
+    job_type: run
+    inventory: "Workshop Inventory"
+    limit: "student1-win1"
+    project: "Windows-Demo"
+    playbook: "chocolatey/site.yml"
+    execution_environment: "windows workshop execution environment"
+    credentials:
+    - "Windows Credential"
+
+  - name: "Rollback"
+    job_type: run
+    inventory: "Workshop Inventory"
+    limit: "student1-win1"
+    project: "Windows-Demo"
+    playbook: "backup.yml"
+    execution_environment: "windows workshop execution environment"
+    credentials:
+    - "Windows Credential"
+
+  - name: "Open SNOW Change Request"
+    job_type: run
+    inventory: "Workshop Inventory"
+    limit: "student1-ansible1"
+    project: "Windows-Demo"
+    playbook: "snow.yml"
+    credentials:
+    - "SNOW Credential"
+
+
+controller_workflows:
+  - name: "Windows Demo Workflow"
+    organization:
+      name: "Default"
+    workflow_nodes:
+      - unified_job_template:
+          name: "Open SNOW Change Request"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node201
+        related:
+          success_nodes:
+          - identifier: node301
+      - unified_job_template:
+          name: "Windows Updates"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node201
+        related:
+          success_nodes:
+          - identifier: node301
+          failure_nodes:
+          - identifier: node302
+          always_nodes: []
+      - unified_job_template:
+          name: "Install IIS"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node301
+        related:
+          success_nodes:
+            - identifier: node401
+          failure_nodes:
+            - identifier: node402
+          always_nodes: []
+      - unified_job_template:
+          name: "Rollback"
+          type: workflow_approval
+          organization:
+            name: "Default"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+        identifier: node302
+      - unified_job_template:
+          name: "Install Additional Packages"
+          type: workflow_approval
+          organization:
+            name: "Default"
+        identifier: node401
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Rollback"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node402
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
