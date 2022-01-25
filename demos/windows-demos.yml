@@ -205,7 +205,7 @@ controller_workflows:
           success_nodes:
             - identifier: node501
           failure_nodes:
-            - node502
+            - identifier: node502
           always_nodes: []
       - unified_job_template:
           name: "Rollback"
