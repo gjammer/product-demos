@@ -134,6 +134,15 @@ controller_workflows:
       name: "Default"
     workflow_nodes:
       - unified_job_template:
+          name: "Windows-Demos"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node100
+        related:
+          success_nodes:
+          - identifier: node101
+      - unified_job_template:
           name: "Open SNOW Change Request"
           type: job_template
           organization:
