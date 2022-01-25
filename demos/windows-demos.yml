@@ -127,6 +127,16 @@ controller_templates:
     credentials:
     - "Windows Credential"
 
+  - name: "Alert Ops!"
+    job_type: run
+    inventory: "Workshop Inventory"
+    limit: "student1-win1"
+    project: "Windows-Demo"
+    playbook: "backup.yml"
+    execution_environment: "windows workshop execution environment"
+    credentials:
+    - "Windows Credential"
+
 
 controller_workflows:
   - name: "Windows Demo Workflow"
@@ -134,8 +144,8 @@ controller_workflows:
       name: "Default"
     workflow_nodes:
       - unified_job_template:
-          name: "Windows-Demos"
-          type: job_template
+          name: "Windows-Demo"
+          type: project_update
           organization:
             name: "Default"
         identifier: node100
@@ -194,7 +204,8 @@ controller_workflows:
         related:
           success_nodes:
             - identifier: node501
-          failure_nodes: []
+          failure_nodes:
+            - node502
           always_nodes: []
       - unified_job_template:
           name: "Rollback"
@@ -212,6 +223,38 @@ controller_workflows:
           organization:
             name: "Default"
         identifier: node501
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Manual override"
+          type: workflow_approval
+          organization:
+            name: "Default"
+        related:
+          success_nodes:
+            - identifier: node601
+          failure_nodes:
+            - identifier: node602
+          always_nodes: []
+        identifier: node502
+      - unified_job_template:
+          name: "Rollback"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node602
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+      - unified_job_template:
+          name: "Alert Ops!"
+          type: job_template
+          organization:
+            name: "Default"
+        identifier: node601
         related:
           success_nodes: []
           failure_nodes: []
